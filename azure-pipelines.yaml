@@ -1,0 +1,20 @@
+trigger:
+- main
+
+variables:
+  imageName: "ecommerce-app"
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: Docker@2
+  displayName: Build and Push Image
+  inputs:
+    containerRegistry: 'containerRegistry: 'acr-connection'
+
+    repository: '$(imageName)'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: |
+      $(Build.BuildId)
