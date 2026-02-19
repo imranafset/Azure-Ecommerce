@@ -1,20 +1,31 @@
 trigger:
 - main
 
-variables:
-  imageName: "ecommerce-app"
-
 pool:
   name: 'local-pool'
 
+variables:
+  backendImage: 'backend'
+  frontendImage: 'frontend'
+
 steps:
+
 - task: Docker@2
-  displayName: Build and Push Image
+  displayName: Build and Push Backend
   inputs:
     containerRegistry: 'acr-connection'
-
-    repository: '$(imageName)'
+    repository: '$(backendImage)'
     command: 'buildAndPush'
-    Dockerfile: '**/Dockerfile'
+    Dockerfile: 'backend/Dockerfile'
+    tags: |
+      $(Build.BuildId)
+
+- task: Docker@2
+  displayName: Build and Push Frontend
+  inputs:
+    containerRegistry: 'acr-connection'
+    repository: '$(frontendImage)'
+    command: 'buildAndPush'
+    Dockerfile: 'frontend/Dockerfile'
     tags: |
       $(Build.BuildId)
