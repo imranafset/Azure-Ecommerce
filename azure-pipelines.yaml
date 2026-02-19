@@ -5,7 +5,7 @@ variables:
   imageName: "ecommerce-app"
 
 pool:
-  vmImage: 'local-pool'
+  name: 'local-pool'
 
 steps:
 - task: Docker@2
