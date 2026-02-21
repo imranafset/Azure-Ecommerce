@@ -5,48 +5,28 @@ pool:
   name: local-pool
 
 variables:
-<<<<<<< HEAD
   imageNameBackend: backend
   imageNameFrontend: frontend
-  acrName: acrecommerceprod
-=======
   acrName: acrecommerceprod123
-  backendImage: 'backend'
-  frontendImage: 'frontend'
->>>>>>> 921790b (changed image tag to latest)
 
 steps:
 
 - task: Docker@2
   displayName: Build and Push Backend
   inputs:
-<<<<<<< HEAD
     command: buildAndPush
     repository: $(imageNameBackend)
     dockerfile: backend/Dockerfile
-    containerRegistry: azure-ecommerce-connection
-=======
-    containerRegistry: 'acr-docker-connection'
-    repository: '$(backendImage)'
-    command: 'buildAndPush'
-    Dockerfile: 'backend/Dockerfile'
->>>>>>> 921790b (changed image tag to latest)
+    containerRegistry: acr-docker-connection
     tags: |
       latest
 
 - task: Docker@2
   displayName: Build and Push Frontend
   inputs:
-<<<<<<< HEAD
     command: buildAndPush
     repository: $(imageNameFrontend)
     dockerfile: frontend/Dockerfile
-    containerRegistry: azure-ecommerce-connection
-=======
-    containerRegistry: 'acr-docker-connection'
-    repository: '$(frontendImage)'
-    command: 'buildAndPush'
-    Dockerfile: 'frontend/Dockerfile'
->>>>>>> 921790b (changed image tag to latest)
+    containerRegistry: acr-docker-connection
     tags: |
       latest
