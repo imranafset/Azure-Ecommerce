@@ -2,30 +2,31 @@ trigger:
 - main
 
 pool:
-  name: 'local-pool'
+  name: local-pool
 
 variables:
-  backendImage: 'backend'
-  frontendImage: 'frontend'
+  imageNameBackend: backend
+  imageNameFrontend: frontend
+  acrName: acrecommerceprod
 
 steps:
 
 - task: Docker@2
   displayName: Build and Push Backend
   inputs:
-    containerRegistry: 'acr-connection'
-    repository: '$(backendImage)'
-    command: 'buildAndPush'
-    Dockerfile: 'backend/Dockerfile'
+    command: buildAndPush
+    repository: $(imageNameBackend)
+    dockerfile: backend/Dockerfile
+    containerRegistry: azure-ecommerce-connection
     tags: |
-      $(Build.BuildId)
+      latest
 
 - task: Docker@2
   displayName: Build and Push Frontend
   inputs:
-    containerRegistry: 'acr-connection'
-    repository: '$(frontendImage)'
-    command: 'buildAndPush'
-    Dockerfile: 'frontend/Dockerfile'
+    command: buildAndPush
+    repository: $(imageNameFrontend)
+    dockerfile: frontend/Dockerfile
+    containerRegistry: azure-ecommerce-connection
     tags: |
-      $(Build.BuildId)
+      latest
