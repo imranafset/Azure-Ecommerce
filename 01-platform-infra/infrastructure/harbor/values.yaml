@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: harbor
+  namespace:argoc
+spec:
+  project: default
+  source:
+    repoURL: https://helm.goharbor.io
+    chart: harbor
+    targetRevision: 1.15.0
+    helm:
+      values: |-
+        # We will point this to the values.yaml in your repo soon, 
+        # but for the first sync, let's keep it simple.
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: harbor-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true  
+    syncOptions:
+      - CreateNamespace=false
