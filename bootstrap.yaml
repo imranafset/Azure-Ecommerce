@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root-platform
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
+    targetRevision: main
+    path: 01-platform-infra/clusters/local
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
