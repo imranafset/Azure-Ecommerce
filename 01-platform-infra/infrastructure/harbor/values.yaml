@@ -1,25 +1,33 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: harbor
-  namespace:argoc
-spec:
-  project: default
-  source:
-    repoURL: https://helm.goharbor.io
-    chart: harbor
-    targetRevision: 1.15.0
-    helm:
-      values: |-
-        # We will point this to the values.yaml in your repo soon, 
-        # but for the first sync, let's keep it simple.
+expose:
+  type: ingress
+  tls:
+    enabled: false # We will enable this once cert-manager is up in Phase 1.2
+  ingress:
+    hosts:
+      core: harbor.local
+    annotations:
+      kubernetes.io/ingress.class: nginx
 
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: harbor-system
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true  
-    syncOptions:
-      - CreateNamespace=false
+externalURL: http://harbor.local
+
+# Harbor requires Persistence
+persistence:
+  enabled: true
+  resourcePolicy: "keep"
+  persistentVolumeClaim:
+    registry:
+      storageClass: "microk8s-hostpath"
+      accessMode: ReadWriteOnce
+      size: 5Gi
+    chartmuseum:
+      storageClass: "microk8s-hostpath"
+      size: 2Gi
+    jobservice:
+      storageClass: "microk8s-hostpath"
+      size: 1Gi
+    database:
+      storageClass: "microk8s-hostpath"
+      size: 1Gi
+    redis:
+      storageClass: "microk8s-hostpath"
+      size: 1Gi
