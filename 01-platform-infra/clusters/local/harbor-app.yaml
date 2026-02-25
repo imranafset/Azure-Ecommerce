@@ -16,7 +16,7 @@ spec:
           - $values/01-platform-infra/clusters/local/harbor/values.yaml
 
     # Source 2 → Your Git Repository (where values.yaml lives)
-    - repoURL: https://gitlab.com/your-user/platform-infra.git
+    - repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
       targetRevision: main
       ref: values
 
