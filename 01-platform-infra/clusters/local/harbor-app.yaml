@@ -5,21 +5,28 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    repoURL: https://helm.goharbor.io
-    chart: harbor
-    targetRevision: 1.15.0
-    helm:
-      values: |-
-        # We will point this to the values.yaml in your repo soon, 
-        # but for the first sync, let's keep it simple.
+
+  sources:
+    # Source 1 → Official Harbor Helm Chart
+    - repoURL: https://helm.goharbor.io
+      chart: harbor
+      targetRevision: 1.15.0
+      helm:
+        valueFiles:
+          - $values/01-platform-infra/clusters/local/harbor/values.yaml
+
+    # Source 2 → Your Git Repository (where values.yaml lives)
+    - repoURL: https://gitlab.com/your-user/platform-infra.git
+      targetRevision: main
+      ref: values
 
   destination:
     server: https://kubernetes.default.svc
     namespace: harbor-system
+
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true  
+      selfHeal: true
     syncOptions:
-      - CreateNamespace=true
+      - CreateNamespace=false
