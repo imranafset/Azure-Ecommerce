@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://helm.goharbor.io
     chart: harbor
-    targetRevision: HEAD
+    targetRevision: 1.15.0
     helm:
       values: |-
         # We will point this to the values.yaml in your repo soon, 
