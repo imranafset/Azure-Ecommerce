@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: harbor-test-cert
+  namespace: harbor-system
+spec:
+  secretName: harbor-test-tls
+  dnsNames:
+    - core.harbor.domain
+  issuerRef:
+    name: self-signed-issuer
+    kind: ClusterIssuer
