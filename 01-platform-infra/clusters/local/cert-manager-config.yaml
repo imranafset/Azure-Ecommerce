@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/alphadata/azure-ecommerce.git
+    repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
     targetRevision: HEAD
     path: 01-platform-infra/clusters/local/cert-manager
   destination:
