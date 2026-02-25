@@ -13,7 +13,7 @@ spec:
       targetRevision: 1.15.0
       helm:
         valueFiles:
-          - $values/01-platform-infra/clusters/local/harbor/values.yaml
+          - $values/01-platform-infra/infrastructure/harbor/values.yaml
 
     # Source 2 → Your Git Repository (where values.yaml lives)
     - repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
