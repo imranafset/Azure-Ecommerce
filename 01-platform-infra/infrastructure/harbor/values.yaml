@@ -1,16 +1,24 @@
 expose:
   type: ingress
   tls:
-    enabled: false # We will enable this once cert-manager is up in Phase 1.2
+    enabled: true
+    certSource: secret
+    secret:
+      # This secret name is what cert-manager will create
+      secretName: harbor-tls-cert
   ingress:
     hosts:
-      core: harbor.local
+      core: core.harbor.domain
     annotations:
       kubernetes.io/ingress.class: nginx
+      # This tells cert-manager to use the issuer we defined
+      cert-manager.io/cluster-issuer: selfsigned-issuer
+      # Ensure it doesn't redirect to HTTPS before the cert is ready
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
 
-externalURL: http://harbor.local
+# Changed to https and the domain you added to /etc/hosts
+externalURL: https://core.harbor.domain
 
-# Harbor requires Persistence
 persistence:
   enabled: true
   resourcePolicy: "keep"
