@@ -1,0 +1,28 @@
+stages:
+  - build
+  - push
+
+variables:
+  HARBOR_HOST: "core.harbor.domain"
+  IMAGE_NAME: "ecommerce/backend-app"
+  # Use the Robot Account credentials from GitLab CI/CD Variables
+  # HARBOR_USER and HARBOR_PASSWORD should be set in GitLab UI
+
+build_and_push:
+  stage: build
+  tags:
+    - shell  # Ensure this matches the tag you gave your runner during registration
+  script:
+    # 1. Login to Harbor using the robot account
+    - echo "$HARBOR_PASSWORD" | docker login $HARBOR_HOST -u "$HARBOR_USER" --password-stdin
+    
+    # 2. Build the image using the commit SHA for versioning
+    - docker build -t $HARBOR_HOST/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
+    - docker build -t $HARBOR_HOST/$IMAGE_NAME:latest .
+    
+    # 3. Push to Harbor
+    - docker push $HARBOR_HOST/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
+    - docker push $HARBOR_HOST/$IMAGE_NAME:latest
+    
+    # 4. Optional: Clean up local images to save disk space on your laptop
+    - docker rmi $HARBOR_HOST/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA

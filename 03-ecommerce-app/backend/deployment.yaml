@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-app
+  namespace: ecommerce-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      imagePullSecrets:
+        - name: harbor-registry-secret
+      containers:
+        - name: backend
+          image: core.harbor.domain/ecommerce/backend-app:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "100m"
+              cpu: "128Mi"
+ 
