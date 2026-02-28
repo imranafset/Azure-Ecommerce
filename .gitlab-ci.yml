@@ -17,8 +17,8 @@ build_and_push:
     - echo "$HARBOR_PASSWORD" | docker login "$HARBOR_HOST" -u "$HARBOR_USER" --password-stdin
     
     # 2. Build the image using the commit SHA for versioning
-    - docker build -t $HARBOR_HOST/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA .
-    - docker build -t $HARBOR_HOST/$IMAGE_NAME:latest .
+    - docker build -t $HARBOR_HOST/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA ./03-ecommerce-app/backend
+    - docker build -t $HARBOR_HOST/$IMAGE_NAME:latest ./03-ecommerce-app/backend
     
     # 3. Push to Harbor
     - docker push $HARBOR_HOST/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
