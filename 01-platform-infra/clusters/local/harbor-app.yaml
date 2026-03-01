@@ -5,17 +5,13 @@ metadata:
   namespace: argocd
 spec:
   project: default
-
   sources:
-    # Source 1 → Official Harbor Helm Chart
     - repoURL: https://helm.goharbor.io
       chart: harbor
       targetRevision: 1.15.0
       helm:
         valueFiles:
           - $values/01-platform-infra/infrastructure/harbor/values.yaml
-
-    # Source 2 → Your Git Repository (where values.yaml lives)
     - repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
       targetRevision: main
       ref: values
@@ -24,18 +20,20 @@ spec:
     server: https://kubernetes.default.svc
     namespace: harbor-system
 
+  # MOVE IT HERE (Top level of spec)
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      jsonPointers:
+        - /data/auth
+    - group: "apps"
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ignoreDifferences:
-          - group: ""
-            kind: Secret
-            jsonPointers:
-            - /data/auth
-          - group: "apps"
-            kind: Deployment
-            jsonPointers:
-            - /spec/template/metadata/annotations
