@@ -15,12 +15,10 @@ spec:
     - repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
       targetRevision: main
       ref: values
-
   destination:
     server: https://kubernetes.default.svc
     namespace: harbor-system
-
-  # MOVE IT HERE (Top level of spec)
+  # TOP LEVEL SPEC
   ignoreDifferences:
     - group: ""
       kind: Secret
@@ -30,7 +28,6 @@ spec:
       kind: Deployment
       jsonPointers:
         - /spec/template/metadata/annotations
-
   syncPolicy:
     automated:
       prune: true
