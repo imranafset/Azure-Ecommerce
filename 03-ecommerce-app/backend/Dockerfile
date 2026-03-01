@@ -7,7 +7,7 @@ RUN mvn clean package -DskipTests
 # Step 2: Runtime Stage
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-# Adjust 'backend-0.0.1-SNAPSHOT.jar' to match your actual build output name
-COPY --from=build /app/target*.jar app.jar
+# Fixed the path to look inside the target directory
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
