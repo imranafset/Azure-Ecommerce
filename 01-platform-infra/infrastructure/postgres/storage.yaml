@@ -1,18 +1,17 @@
 apiVersion: v1
-kind: Secret
+kind: PersistentVolume
 metadata:
-  name: postgres-pv
+  name: ecommerce-postgres-pv  # Change the name to be unique!
   labels:
-    type: local
+    app: ecommerce-postgres
 spec:
   storageClassName: manual
   capacity:
-    storage: 5Gi
+    storage: 5Gi  # Increased to 5Gi to match our original plan
   accessModes:
     - ReadWriteOnce
   hostPath:
-     path: "/mnt/data/postgres"
-
+    path: "/mnt/data/ecommerce-postgres" # Give it a unique host path
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -26,3 +25,6 @@ spec:
   resources:
     requests:
       storage: 5Gi
+  selector:
+    matchLabels:
+      app: ecommerce-postgres # This forces it to bind to the PV above
