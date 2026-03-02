@@ -22,6 +22,17 @@ spec:
   ignoreDifferences:
     - group: ""
       kind: Secret
+      name: harbor-core
+      jsonPointers:
+        - /data/auth
+    - group: ""
+      kind: Secret      
+      name: harbor-registry
+      jsonPointers:
+        - /data/auth
+    - group: ""
+      kind: Secret      
+      name: harbor-registry-htpasswd
       jsonPointers:
         - /data/auth
     - group: "apps"
