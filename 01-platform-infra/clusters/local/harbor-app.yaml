@@ -24,17 +24,22 @@ spec:
       kind: Secret
       name: harbor-core
       jsonPointers:
-        - /data/auth
+        - /data
     - group: ""
       kind: Secret      
       name: harbor-registry
       jsonPointers:
-        - /data/auth
+        - /data
     - group: ""
       kind: Secret      
       name: harbor-registry-htpasswd
       jsonPointers:
-        - /data/auth
+        - /data
+    - group: ""
+      kind: Secret      
+      name: harbor-jobservice
+      jsonPointers:
+        - /data
     - group: "apps"
       kind: Deployment
       jsonPointers:
