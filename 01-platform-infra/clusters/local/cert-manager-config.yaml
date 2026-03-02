@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
-    targetRevision: HEAD
+    targetRevision: main
     path: 01-platform-infra/infrastructure/cert-manager
   destination:
     server: https://kubernetes.default.svc
@@ -18,5 +18,5 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - RespectIgnoreDifferences=true
       - ApplyOutOfSyncOnly=true
+      - serversideApply=true
