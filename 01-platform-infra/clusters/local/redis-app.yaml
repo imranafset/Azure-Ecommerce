@@ -14,7 +14,7 @@ spec:
         architecture: standalone
         imagae:
           registry: https://core.harbor.domain/
-          repository: ecommerce/redis
+          repository: library/redis
           tag: 7.2.4
         auth:
           enabled: true
