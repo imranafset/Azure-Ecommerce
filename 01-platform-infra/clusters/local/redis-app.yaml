@@ -13,9 +13,10 @@ spec:
       values: |
         architecture: standalone
         imagae:
-          registry: https://core.harbor.domain/
+          registry: core.harbor.domain/
           repository: library/redis
           tag: redis:7.2.4-alpine
+          pullPolicy: IfNotPresent
         auth:
           enabled: true
           existingSecret: redis-password-secret
