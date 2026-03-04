@@ -12,6 +12,10 @@ spec:
     helm:
       values: |
         architecture: standalone
+        imagae:
+          registry: https://core.harbor.domain/
+          repository: ecommerce/redis
+          tag: 7.2.4
         auth:
           enabled: true
           existingSecret: redis-password-secret
