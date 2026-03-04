@@ -8,7 +8,9 @@ spec:
   source:
     repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
     targetRevision: HEAD
-    path: 01-platform-infra/infrastructure/cert-manager # Where your new files are
+    path: 01-platform-infra/infrastructure/ # Where your new files are
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
