@@ -13,7 +13,7 @@ spec:
       values: |
         architecture: standalone
         image:
-          registry: core.harbor.domain/
+          registry: core.harbor.domain
           repository: library/redis
           tag: 7.2.4-alpine
           pullPolicy: IfNotPresent
