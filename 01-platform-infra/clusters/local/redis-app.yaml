@@ -12,7 +12,7 @@ spec:
     helm:
       values: |
         architecture: standalone
-        imagae:
+        image:
           registry: core.harbor.domain/
           repository: library/redis
           tag: redis:7.2.4-alpine
