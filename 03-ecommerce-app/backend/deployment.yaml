@@ -20,10 +20,21 @@ spec:
           image: core.harbor.domain/ecommerce/backend-app:latest
           ports:
             - containerPort: 8080
+          # --- ADD THIS SECTION BELOW ---
+          env:
+            - name: REDIS_HOST
+              value: "redis-infra-master.redis-system.svc.cluster.local"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-password-secret
+                  key: redis-password
+          # ------------------------------
           resources:
             requests:
               cpu: "100m"
             limits:
               memory: "200Mi"
               cpu: "200m"
- 

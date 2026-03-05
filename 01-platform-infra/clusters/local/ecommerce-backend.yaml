@@ -9,18 +9,6 @@ spec:
     repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
     targetRevision: main
     path: 03-ecommerce-app/backend
-    helm: # This must be inside 'source'
-      values: |
-        env:
-          - name: REDIS_HOST
-            value: redis-infra-master.redis-system.svc.cluster.local
-          - name: REDIS_PORT
-            value: "6379"
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: redis-password-secret
-                key: redis-password
   destination:
     server: https://kubernetes.default.svc
     namespace: ecommerce-app
@@ -30,3 +18,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      
