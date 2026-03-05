@@ -14,8 +14,8 @@ spec:
         architecture: standalone
         image:
           registry: core.harbor.domain
-          repository: library/redis
-          tag: 7.2.4-alpine
+          repository: dockerhub/bitnami/redis
+          tag: latest
           pullPolicy: IfNotPresent
         auth:
           enabled: true
