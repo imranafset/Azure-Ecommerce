@@ -22,6 +22,10 @@ spec:
             - containerPort: 8080
           # --- ADD THIS SECTION BELOW ---
           env:
+            - name: LOGGING_LEVEL_ORG_HIBERNATE_SQL
+              value: "DEBUG"
+            - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_REDIS
+              value: "DEBUG"
             - name: REDIS_HOST
               value: "redis-infra-master.redis-system.svc.cluster.local"
             - name: REDIS_PORT
