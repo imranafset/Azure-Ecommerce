@@ -3,10 +3,10 @@ kind: Ingress
 metadata:
   name: ecommerce-ingress
   namespace: ecommerce-app
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  #annotations:
+    #nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: public
+  ingressClassName: nginx
   rules:
     - host: api.ecommerce.local
       http:
