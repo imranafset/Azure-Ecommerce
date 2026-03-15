@@ -28,6 +28,14 @@ spec:
               value: "DEBUG"
             - name: REDIS_HOST
               value: "redis-infra-master.redis-system.svc.cluster.local"
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres-service:5432/ecommerce"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "admin"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "admin123"
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              value: "update"
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_PASSWORD
