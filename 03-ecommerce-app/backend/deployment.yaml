@@ -26,6 +26,8 @@ spec:
               value: "DEBUG"
             - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_REDIS
               value: "DEBUG"
+            - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
+              value: "health,info,prometheus"
             - name: REDIS_HOST
               value: "redis-infra-master.redis-system.svc.cluster.local"
             - name: SPRING_DATASOURCE_URL
