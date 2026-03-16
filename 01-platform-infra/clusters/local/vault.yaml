@@ -6,13 +6,19 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
-    targetRevision: HEAD
-    path: 01-platform-infra/infrastructure/vault # Where your new files are
+    repoURL: https://helm.releases.hashicorp.com
+    chart: vault
+    targetRevision: 0.28.0
+    
 
     helm:
-      valuesFiles:
-        - vault-values.yaml
+      values: |
+        server:
+          dev:
+            enabled: true
+          ui:
+            enabled: true
+        
   destination:
     server: https://kubernetes.default.svc
     namespace: vault
