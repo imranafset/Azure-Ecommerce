@@ -1,0 +1,48 @@
+global:
+  enabled: true
+  
+server:
+  enabled: true
+
+  image:
+    repository: vault
+    tag: "1.15.2"
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+  ui:
+    enabled: true
+
+  dataStorage:
+    enabled: true
+    size: 1Gi
+    storageClass: standard
+
+  ha:
+    enabled: false
+
+  standalone:
+    enabled: true
+    config:
+      ui = true
+      listener "tcp" {
+        address = "0.0.0.0:8200"
+      }
+      storage "file" {
+        path = "/vault/data"
+      }
+
+      disable_mlock = true
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 8200
+
+injector:
+  enabled: true

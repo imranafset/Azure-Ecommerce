@@ -6,14 +6,13 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://helm.releases.hashicorp.com
-    targetRevision: 0.28.0 # Use the latest stable version
-    chart: vault
+    repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
+    targetRevision: HEAD
+    path: 01-platform-infra/infrastructure/vault # Where your new files are
+
     helm:
-      values: |
-        server:
-          dev:
-            enabled: true  # Using 'dev' mode for easier setup on local k8s
+      valuesFiles:
+        - vault-values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: vault
