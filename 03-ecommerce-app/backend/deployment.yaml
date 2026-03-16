@@ -31,9 +31,15 @@ spec:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-service:5432/ecommerce"
             - name: SPRING_DATASOURCE_USERNAME
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: username
             - name: SPRING_DATASOURCE_PASSWORD
-              value: "admin123"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
             - name: SPRING_JPA_HIBERNATE_DDL_AUTO
               value: "update"
             - name: REDIS_PORT
