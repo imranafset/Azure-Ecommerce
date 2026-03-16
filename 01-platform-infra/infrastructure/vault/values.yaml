@@ -1,44 +1,52 @@
 global:
   enabled: true
-  
+
 server:
   enabled: true
 
   image:
-    repository: vault
+    repository: "hashicorp/vault"
     tag: "1.15.2"
 
   resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
     requests:
-      cpu: 250m
       memory: 256Mi
+      cpu: 250m
+    limits:
+      memory: 512Mi
+      cpu: 500m
 
+  # Enable Vault Web UI
   ui:
     enabled: true
 
+  # Development-friendly storage
   dataStorage:
     enabled: true
     size: 1Gi
     storageClass: standard
 
+  # HA disabled for local cluster
   ha:
     enabled: false
 
+  # File storage backend
   standalone:
     enabled: true
-    config:
+    config: |
       ui = true
+
       listener "tcp" {
-        address = "0.0.0.0:8200"
+        address     = "0.0.0.0:8200"
+        tls_disable = 1
       }
+
       storage "file" {
         path = "/vault/data"
       }
 
       disable_mlock = true
+
   service:
     enabled: true
     type: ClusterIP
