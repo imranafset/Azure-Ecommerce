@@ -5,8 +5,13 @@ metadata:
   namespace: vault
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    cert-manager.io/cluster-issuer: "selfsigned-issuer"
 spec:
   ingressClassName: nginx
+  tls:
+  - hosts:
+    - vault.ecommerce.local
+    secretName: vault-tls
   rules:
   - host: vault.ecommerce.local
     http:
