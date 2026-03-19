@@ -6,34 +6,39 @@ metadata:
 spec:
   template:
     spec:
-      serviceAccountName: vault
+      restartPolicy: OnFailure
       containers:
       - name: vault-bootstrap
         image: hashicorp/vault:1.16
         command: ["/bin/sh", "-c"]
         args:
           - |
-            sleep 10; # Wait for Vault to be ready
+            sleep 15
 
-            export VAULT_ADDR=http://vault.vault.svc.:8200
+            export VAULT_ADDR=http://vault.vault.svc:8200
 
-            echo "Creating policy..."
+            # 🔴 IMPORTANT: login (replace with your root token)
+            vault login root
+
+            echo "Enable Kubernetes auth (if not enabled)"
+            vault auth enable kubernetes || true
+
+            echo "Configure Kubernetes auth"
+            vault write auth/kubernetes/config \
+              token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+              kubernetes_host="https://kubernetes.default.svc" \
+              kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+            echo "Create policy"
             vault policy write ecommerce-policy - <<EOF
             path "secret/data/ecommerce/*" {
               capabilities = ["read", "list"]
             }
             EOF
 
-            echo "Configuring Kubernetes auth method..."
-            vault write auth/kubernetes/config \
-              token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
-              kubernetes_host="https://kubernetes.default.svc" \
-              kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-
-            echo "Creating role..."
+            echo "Create role"
             vault write auth/kubernetes/role/ecommerce-role \
               bound_service_account_names=default \
               bound_service_account_namespaces=ecommerce-app \
               policies=ecommerce-policy \
               ttl=1h
-      restartPolicy: OnFailure
