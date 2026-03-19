@@ -4,6 +4,7 @@ metadata:
   name: vault-ingress
   namespace: vault
 spec:
+  ingressClassName: nginx
   tls:
   - hosts:
     - vault.ecommerce.local
