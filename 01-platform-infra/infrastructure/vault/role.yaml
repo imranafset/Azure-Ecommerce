@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-role
+  namespace: vault
+data:
+  role.hcl: |
+    bound_service_account_names = default
+    bound_service_account_namespaces = ecommerce-app
+    policies="ecommerce-policy"
+    ttl = "1h"

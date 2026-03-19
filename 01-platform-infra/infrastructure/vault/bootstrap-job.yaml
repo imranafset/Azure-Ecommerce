@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-bootstrap
+  namespace: vault
+spec:
+  template:
+    spec:
+      serviceAccountName: vault
+      containers:
+      - name: vault-bootstrap
+        image: hashicorp/vault:1.16
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            sleep 10; # Wait for Vault to be ready
+
+            export VAULT_ADDR=http://vault.vault.svc.:8200
+
+            echo "Creating policy..."
+            vault policy write ecommerce-policy - <<EOF
+            path "secret/data/ecommerce/*" {
+              capabilities = ["read", "list"]
+            }
+            EOF
+
+            echo "Configuring Kubernetes auth method..."
+            vault write auth/kubernetes/config \
+              token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+              kubernetes_host="https://kubernetes.default.svc" \
+              kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+            echo "Creating role..."
+            vault write auth/kubernetes/role/ecommerce-role \
+              bound_service_account_names=default \
+              bound_service_account_namespaces=ecommerce-app \
+              policies=ecommerce-policy \
+              ttl=1h
+      restartPolicy: OnFailure
