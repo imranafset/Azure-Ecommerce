@@ -61,6 +61,11 @@ spec:
                 secretKeyRef:
                   name: redis-password-secret
                   key: redis-password
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: vault-root-token
+                  key: token
           # ------------------------------
           resources:
             requests:
