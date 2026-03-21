@@ -6,27 +6,16 @@ server:
 
   image:
     repository: hashicorp/vault
-    tag: "1.15.2"
-
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 250m
-    limits:
-      memory: 512Mi
-      cpu: 500m
+    tag: "1.16.1"
 
   ui:
     enabled: true
 
-  # ✅ THIS IS THE IMPORTANT PART
+  # 🔥 CRITICAL FIX
   dataStorage:
     enabled: true
     size: 1Gi
-    storageClass: microk8s-hostpath   # 🔴 IMPORTANT for MicroK8s
-
-  ha:
-    enabled: false
+    storageClass: microk8s-hostpath   # <-- IMPORTANT (you are using microk8s)
 
   standalone:
     enabled: true
