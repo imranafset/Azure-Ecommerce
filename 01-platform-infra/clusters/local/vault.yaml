@@ -5,30 +5,72 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  ignoreDifferences:
-  - group: admissionregistration.k8s.io
-    kind: MutatingWebhookConfiguration
-    name: vault-agent-injector-cfg
-    jqPathExpressions:
-      - '.webhooks[].clientConfig.caBundle'
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: vault
 
   source:
     repoURL: https://helm.releases.hashicorp.com
     chart: vault
     targetRevision: 0.28.0
-    
 
     helm:
       values: |
+        global:
+          enabled: true
+
         server:
-          dev:
-            enabled: true
+          image:
+            repository: hashicorp/vault
+            tag: "1.16.1"
+
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 250m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+
           ui:
             enabled: true
-        
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: vault
+
+          # ❌ REMOVE DEV MODE (CRITICAL)
+          dev:
+            enabled: false
+
+          # ✅ ENABLE REAL STORAGE
+          standalone:
+            enabled: true
+            config: |
+              ui = true
+
+              listener "tcp" {
+                address     = "0.0.0.0:8200"
+                tls_disable = 1
+              }
+
+              storage "file" {
+                path = "/vault/data"
+              }
+
+              disable_mlock = true
+
+          # ✅ PERSISTENT VOLUME (THIS FIXES EVERYTHING)
+          dataStorage:
+            enabled: true
+            size: 1Gi
+            storageClass: microk8s-hostpath
+
+          service:
+            enabled: true
+            type: ClusterIP
+            port: 8200
+
+        injector:
+          enabled: true
+
   syncPolicy:
     automated:
       prune: true
