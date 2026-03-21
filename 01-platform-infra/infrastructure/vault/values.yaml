@@ -5,7 +5,7 @@ server:
   enabled: true
 
   image:
-    repository: "hashicorp/vault"
+    repository: hashicorp/vault
     tag: "1.15.2"
 
   resources:
@@ -16,21 +16,18 @@ server:
       memory: 512Mi
       cpu: 500m
 
-  # Enable Vault Web UI
   ui:
     enabled: true
 
-  # Development-friendly storage
+  # ✅ THIS IS THE IMPORTANT PART
   dataStorage:
     enabled: true
     size: 1Gi
-    storageClass: standard
+    storageClass: microk8s-hostpath   # 🔴 IMPORTANT for MicroK8s
 
-  # HA disabled for local cluster
   ha:
     enabled: false
 
-  # File storage backend
   standalone:
     enabled: true
     config: |
