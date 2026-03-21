@@ -26,6 +26,7 @@ spec:
           SPRING_DATASOURCE_PASSWORD={{ .Data.data.password }}
           {{- end }}
     spec:
+      serviceAccountName: backend-app-sa
       imagePullSecrets:
         - name: harbor-registry-secret
       containers:
