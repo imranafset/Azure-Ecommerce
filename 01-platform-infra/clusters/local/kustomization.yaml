@@ -9,4 +9,5 @@ resources:
   - ecommerce-backend.yaml
   - vault.yaml
   - vault-addons.yaml
+  - keycloak.yaml
   
