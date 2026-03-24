@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: vault-unsealer
+  name: vault-unsealer-v3
   namespace: vault
 spec:
   template:
@@ -12,18 +12,23 @@ spec:
         image: hashicorp/vault:1.16.1
         env:
         - name: UNSEAL_KEY
-          value: YPNw+tMJkvT7pdHwJrJkIXxt5/2WYHQ4x/OGcJNw14E=
+          valueFrom:
+            secretKeyRef:
+              name: vault-unseal-keys
+              key: key1
         command: ["/bin/sh", "-c"]
         args:
           - |
             export VAULT_ADDR=http://vault.vault.svc:8200
+            
+            echo "Waiting for Vault..."
             until vault status -tls-skip-verify > /dev/null 2>&1 || [ $? -eq 2 ]; do
-              echo "Waiting for Vault to be ready..."
-              sleep 5
+              sleep 2
             done
 
-            if [ "$(vault status -format=json | jq -r '.sealed')" = "true" ]; then
-              echo "Vault is sealed unsealing..."
+            if [ "$(vault status -format=json -tls-skip-verify | jq -r '.sealed')" = "true" ]; then
+              echo "Vault is sealed. Unsealing now..."
+              vault operator unseal -tls-skip-verify $UNSEAL_KEY
             else
-              echo "Vault is already unsealed."
+              echo "Vault is already unsealed. Nothing to do."
             fi
