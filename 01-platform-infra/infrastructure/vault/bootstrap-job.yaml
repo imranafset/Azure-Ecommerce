@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: vault-unsealer-v3
+  name: vault-unsealer-v5
   namespace: vault
 spec:
   template:
@@ -21,14 +21,16 @@ spec:
           - |
             export VAULT_ADDR=http://vault.vault.svc:8200
             
-            echo "Waiting for Vault..."
+            echo "Waiting for Vault API..."
             until vault status -tls-skip-verify > /dev/null 2>&1 || [ $? -eq 2 ]; do
-              sleep 2
+              sleep 5
             done
 
-            if [ "$(vault status -format=json -tls-skip-verify | jq -r '.sealed')" = "true" ]; then
-              echo "Vault is sealed. Unsealing now..."
+            # Check status using grep instead of jq
+            while vault status -tls-skip-verify | grep -q "Sealed.*true"; do
+              echo "Vault is sealed. Sending unseal key..."
               vault operator unseal -tls-skip-verify $UNSEAL_KEY
-            else
-              echo "Vault is already unsealed. Nothing to do."
-            fi
+              sleep 5
+            done
+
+            echo "Vault is now UNSEALED!"
