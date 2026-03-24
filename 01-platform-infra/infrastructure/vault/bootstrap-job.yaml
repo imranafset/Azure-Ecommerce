@@ -1,44 +1,29 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: vault-bootstrap
+  name: vault-unsealer
   namespace: vault
 spec:
   template:
     spec:
       restartPolicy: OnFailure
       containers:
-      - name: vault-bootstrap
-        image: hashicorp/vault:1.16
+      - name: vault-unsealer
+        image: hashicorp/vault:1.16.1
+        env:
+        - name: UNSEAL_KEY
+          value: YPNw+tMJkvT7pdHwJrJkIXxt5/2WYHQ4x/OGcJNw14E=
         command: ["/bin/sh", "-c"]
         args:
           - |
-            sleep 15
-
             export VAULT_ADDR=http://vault.vault.svc:8200
+            until vault status -tls-skip-verify > /dev/null 2>&1 || [ $? -eq 2 ]; do
+              echo "Waiting for Vault to be ready..."
+              sleep 5
+            done
 
-            # 🔴 IMPORTANT: login (replace with your root token)
-            vault login root
-
-            echo "Enable Kubernetes auth (if not enabled)"
-            vault auth enable kubernetes || true
-
-            echo "Configure Kubernetes auth"
-            vault write auth/kubernetes/config \
-              token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
-              kubernetes_host="https://kubernetes.default.svc" \
-              kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-
-            echo "Create policy"
-            vault policy write ecommerce-policy - <<EOF
-            path "secret/data/ecommerce/*" {
-              capabilities = ["read", "list"]
-            }
-            EOF
-
-            echo "Create role"
-            vault write auth/kubernetes/role/ecommerce-role \
-              bound_service_account_names=default \
-              bound_service_account_namespaces=ecommerce-app \
-              policies=ecommerce-policy \
-              ttl=1h
+            if [ "$(vault status -format=json | jq -r '.sealed')" = "true" ]; then
+              echo "Vault is sealed unsealing..."
+            else
+              echo "Vault is already unsealed."
+            fi
