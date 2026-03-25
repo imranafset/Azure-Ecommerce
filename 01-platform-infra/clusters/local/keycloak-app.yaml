@@ -4,38 +4,57 @@ metadata:
   name: keycloak
   namespace: argocd
 spec:
-  project: default 
+  project: default
   source:
+    repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git  # Replace with your repo if using Helm
     chart: keycloak
-    repoURL: https://charts.bitnami.com/bitnami
-    targetRevision: 22.1.0
+    targetRevision: 26.5.6
     helm:
       values: |
         image:
-          registry: core.harbor.domain
-          repository: ecommerce/quay.io/keycloak/keycloak
+          registry: quay.io
+          repository: keycloak/keycloak
           tag: 26.5.6
 
+        # PostgreSQL configuration
         postgresql:
-          image:
-            registry: core.harbor.domain
-            repository: dockerhub/bitnami/postgresql
-            tag: latest
-      parameters:
-        - name: auth.adminUser
-          value: admin
-        - name: auth.adminPassword
-          value: admin123
-        - name: proxy
-          value: "edge"
-        - name: service.type
-          value: ClusterIP
+          enabled: true
+          postgresqlUsername: keycloak
+          postgresqlPassword: keycloak123
+          postgresqlDatabase: keycloak
+          service:
+            port: 5432
+
+        # Keycloak environment variables
+        extraEnv:
+          - name: KEYCLOAK_ADMIN
+            value: admin
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            value: admin123
+          - name: KC_DB
+            value: postgres
+          - name: KC_DB_URL_HOST
+            value: keycloak-postgresql.keycloak.svc.cluster.local
+          - name: KC_DB_URL_DATABASE
+            value: keycloak
+          - name: KC_DB_USERNAME
+            value: keycloak
+          - name: KC_DB_PASSWORD
+            value: keycloak123
+
+        # Service type
+        service:
+          type: ClusterIP
+
+        # Remove any Bitnami init container references
+        initContainers: []
+
   destination:
     server: https://kubernetes.default.svc
     namespace: keycloak
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true  
-  syncOptions:
-    - CreateNamespace=true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
