@@ -13,7 +13,7 @@ spec:
       values: |
         image:
           registry: core.harbor.domain
-          repository: ecommerce/keycloak
+          repository: ecommerce/bitnamilegacy/keycloak
           tag: latest
 
         postgresql:
