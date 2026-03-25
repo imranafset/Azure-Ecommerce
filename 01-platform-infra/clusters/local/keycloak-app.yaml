@@ -10,6 +10,17 @@ spec:
     repoURL: https://charts.bitnami.com/bitnami
     targetRevision: 22.1.0
     helm:
+      values: |
+        image:
+          registry: core.harbor.domain
+          repository: dockerhub/bitnami/keycloak
+          tag: latest
+
+        postgresql:
+          image:
+            registry: core.harbor.domain
+            repository: dockerhub/bitnami/postgresql
+            tag: latest
       parameters:
         - name: auth.adminUser
           value: admin
