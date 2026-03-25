@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git  # Replace with your repo if using Helm
+    repoURL: https://www.keycloak.org/helm-charts  # Replace with your repo if using Helm
     chart: keycloak
     targetRevision: 26.5.6
     helm:
