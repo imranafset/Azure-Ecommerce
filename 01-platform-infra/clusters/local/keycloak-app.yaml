@@ -13,7 +13,7 @@ spec:
       values: |
         image:
           registry: core.harbor.domain
-          repository: quay-proxy/keycloak/keycloak:latest
+          repository: quay-proxy/keycloak/keycloak
           tag: latest
 
         postgresql:
