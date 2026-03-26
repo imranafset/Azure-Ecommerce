@@ -28,14 +28,17 @@ spec:
       - name: keycloak
         image: quay.io/keycloak/keycloak:21.1.1
 
-        command: ["/bin/sh", "-c"]
+        command: ["/bin/sh"]
+
         args:
+          - -c
           - |
             echo "Loading Vault secrets..."
-            cat /vault/secrets/keycloak-admin
-            source /vault/secrets/keycloak-admin
-            echo "Starting Keycloak..."
-            /opt/keycloak/bin/kc.sh start-dev --http-port=8080
+            . /vault/secrets/keycloak-admin
+
+            echo "Admin User: $KEYCLOAK_ADMIN"
+            exec /opt/keycloak/bin/kc.sh start-dev --http-port=8080
+            
 
         ports:
         - containerPort: 8080
