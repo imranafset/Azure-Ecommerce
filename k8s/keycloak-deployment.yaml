@@ -12,15 +12,23 @@ spec:
     metadata:
       labels:
         app: keycloak
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "keycloak-role"
+        vault.hashicorp.com/agent-inject-secret-keycloak-admin: "secret/data/keycloak"
+        vault.hashicorp.com/agent-inject-template-keycloak-admin: |
+          {{- with secret "secret/data/keycloak" -}}
+          export KEYCLOAK_ADMIN={{ .Data.data.KEYCLOAK_ADMIN }}
+          export KEYCLOAK_ADMIN_PASSWORD={{ .Data.data.KEYCLOAK_ADMIN_PASSWORD }}
+          {{- end }}
     spec:
+      serviceAccountName: keycloak-sa
       containers:
       - name: keycloak
         image: quay.io/keycloak/keycloak:21.1.1
+        args: ["start-dev", "--http-port=8080"]
         ports:
         - containerPort: 8080
         env:
-        - name: KEYCLOAK_ADMIN
-          value: admin
-        - name: KEYCLOAK_ADMIN_PASSWORD
-          value: admin
-        args: ["start-dev", "--http-port=8080"]
+        - configMapKeyRef:
+            name: keycloak-env

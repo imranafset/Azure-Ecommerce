@@ -1,0 +1,7 @@
+apiversion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-env
+  namespace: keycloak
+data:
+  JAVA_OPTS: "-Dkeycloak.profile.feature.upload_scripts=enabled"
