@@ -15,12 +15,15 @@ spec:
       annotations:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "keycloak-role"
+
         vault.hashicorp.com/agent-inject-secret-keycloak-admin: "secret/data/keycloak"
+
         vault.hashicorp.com/agent-inject-template-keycloak-admin: |
           {{- with secret "secret/data/keycloak" -}}
           export KEYCLOAK_ADMIN={{ .Data.data.KEYCLOAK_ADMIN }}
           export KEYCLOAK_ADMIN_PASSWORD={{ .Data.data.KEYCLOAK_ADMIN_PASSWORD }}
           {{- end }}
+
     spec:
       serviceAccountName: keycloak-sa
 
@@ -28,6 +31,7 @@ spec:
       - name: keycloak
         image: quay.io/keycloak/keycloak:21.1.1
 
+        # ✅ OVERRIDE ENTRYPOINT PROPERLY
         command: ["/bin/sh"]
 
         args:
@@ -36,18 +40,9 @@ spec:
             echo "Loading Vault secrets..."
             . /vault/secrets/keycloak-admin
 
-            echo "Admin User: $KEYCLOAK_ADMIN"
+            echo "Admin user: $KEYCLOAK_ADMIN"
+
             exec /opt/keycloak/bin/kc.sh start-dev --http-port=8080
-            
 
         ports:
         - containerPort: 8080
-
-        volumeMounts:
-        - name: vault-secrets
-          mountPath: /vault/secrets
-
-      volumes:
-      - name: vault-secrets
-        emptyDir:
-          medium: Memory
