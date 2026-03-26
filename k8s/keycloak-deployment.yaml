@@ -23,19 +23,19 @@ spec:
           {{- end }}
     spec:
       serviceAccountName: keycloak-sa
+
       containers:
       - name: keycloak
         image: quay.io/keycloak/keycloak:21.1.1
-        
-        commands: ["/bin/bash", "-c"]
+
+        command: ["/bin/sh", "-c"]
         args:
           - |
-            echo "Load vault secrets..."
+            echo "Loading Vault secrets..."
             cat /vault/secrets/keycloak-admin
             source /vault/secrets/keycloak-admin
             echo "Starting Keycloak..."
             /opt/keycloak/bin/kc.sh start-dev --http-port=8080
-
 
         ports:
         - containerPort: 8080
@@ -43,11 +43,8 @@ spec:
         volumeMounts:
         - name: vault-secrets
           mountPath: /vault/secrets
-          
+
       volumes:
       - name: vault-secrets
         emptyDir:
-        medium: Memory
-        
-        
-        
+          medium: Memory
