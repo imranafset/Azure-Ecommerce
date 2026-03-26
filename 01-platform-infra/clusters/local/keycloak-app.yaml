@@ -6,49 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://www.keycloak.org/helm-charts  # Replace with your repo if using Helm
-    chart: keycloak
-    targetRevision: 26.5.6
-    helm:
-      values: |
-        image:
-          registry: quay.io
-          repository: keycloak/keycloak
-          tag: 26.5.6
-
-        # PostgreSQL configuration
-        postgresql:
-          enabled: true
-          postgresqlUsername: keycloak
-          postgresqlPassword: keycloak123
-          postgresqlDatabase: keycloak
-          service:
-            port: 5432
-
-        # Keycloak environment variables
-        extraEnv:
-          - name: KEYCLOAK_ADMIN
-            value: admin
-          - name: KEYCLOAK_ADMIN_PASSWORD
-            value: admin123
-          - name: KC_DB
-            value: postgres
-          - name: KC_DB_URL_HOST
-            value: keycloak-postgresql.keycloak.svc.cluster.local
-          - name: KC_DB_URL_DATABASE
-            value: keycloak
-          - name: KC_DB_USERNAME
-            value: keycloak
-          - name: KC_DB_PASSWORD
-            value: keycloak123
-
-        # Service type
-        service:
-          type: ClusterIP
-
-        # Remove any Bitnami init container references
-        initContainers: []
-
+    repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
+    targetRevision: main
+    path: k8s   # <-- folder where YAML is stored
   destination:
     server: https://kubernetes.default.svc
     namespace: keycloak
@@ -56,5 +16,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
