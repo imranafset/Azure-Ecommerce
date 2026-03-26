@@ -23,3 +23,4 @@ spec:
           value: admin
         - name: KEYCLOAK_ADMIN_PASSWORD
           value: admin
+        args: ["start-dev", "--http-port=8080"]
