@@ -29,6 +29,6 @@ spec:
         args: ["start-dev", "--http-port=8080"]
         ports:
         - containerPort: 8080
-        env:
-        - configMapKeyRef:
-            name: keycloak-env
+        commands: ["/bin/sh", "-c",]
+        args: ["source /vault/secrets/keycloak-admin && /opt/keycloak/bin/kc.sh start-dev --http-port=8080"]
+        
