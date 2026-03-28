@@ -48,7 +48,7 @@ spec:
               --db-username=$KC_DB_USERNAME \
               --db-password=$KC_DB_PASSWORD \
               --http-port=8080
-              --hostnname=keycloak.ecommerce.local
+              --hostname=keycloak.ecommerce.local
               --hostname-strict=false
 
         env:
