@@ -15,71 +15,58 @@ spec:
       annotations:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "keycloak-role"
-
         vault.hashicorp.com/agent-inject-secret-keycloak-admin: "secret/data/keycloak"
-
         vault.hashicorp.com/agent-inject-template-keycloak-admin: |
           {{- with secret "secret/data/keycloak" -}}
           export KEYCLOAK_ADMIN={{ .Data.data.KEYCLOAK_ADMIN }}
           export KEYCLOAK_ADMIN_PASSWORD={{ .Data.data.KEYCLOAK_ADMIN_PASSWORD }}
           {{- end }}
-
     spec:
       serviceAccountName: keycloak-sa
-
       containers:
-      - name: keycloak
-        image: quay.io/keycloak/keycloak:21.1.1
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:21.1.1
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - |
+              echo "Loading Vault secrets..."
+              . /vault/secrets/keycloak-admin
 
-        # ✅ OVERRIDE ENTRYPOINT PROPERLY
-        command: ["/bin/sh"]
-
-        args:
-          - -c
-          - |
-            echo "Loading Vault secrets..."
-            . /vault/secrets/keycloak-admin
-
-            echo "Starting keycloak with postgres"
-
-            exec /opt/keycloak/bin/kc.sh start \
-              --db=postgres \
-              --db-url=jdbc:postgresql://postgres.keycloak.svc.cluster.local:5432/keycloak \
-              --db-username=$KC_DB_USERNAME \
-              --db-password=$KC_DB_PASSWORD \
-              --https-key-store-file=/etc/x509/keycloak.p12 \
-              --https-key-store-password=changeit \
-              --https-key-alias=keycloak \
-              --http-port=8080 \
-              --hostname=keycloak.ecommerce.local \
-              --hostname-strict=true
-        volumeMounts:
-          - name: keycloak-tls
-            mountPath: /etc/x509/keycloak.p12
-            readOnly: true
+              echo "Starting Keycloak with Postgres"
+              exec /opt/keycloak/bin/kc.sh start \
+                --db=postgres \
+                --db-url=jdbc:postgresql://postgres.keycloak.svc.cluster.local:5432/keycloak \
+                --db-username=$KC_DB_USERNAME \
+                --db-password=$KC_DB_PASSWORD \
+                --https-key-store-file=/etc/x509/keycloak.p12 \
+                --https-key-store-password=changeit \
+                --http-port=8080 \
+                --hostname=keycloak.ecommerce.local \
+                --hostname-strict=true
+          volumeMounts:
+            - name: keycloak-tls
+              mountPath: /etc/x509/keycloak.p12
+              subPath: keycloak.p12
+              readOnly: true
+          env:
+            - name: KC_DB
+              value: postgres
+            - name: KC_DB_URL
+              value: jdbc:postgresql://postgres.keycloak.svc.cluster.local:5432/keycloak
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+          ports:
+            - containerPort: 8080
       volumes:
         - name: keycloak-tls
           secret:
             secretName: keycloak-tls
-
-      env:
-        - name: KC_DB
-          value: postgres
-        - name: KC_DB_URL
-          value: jdbc:postgresql://postgres.keycloak.svc.cluster.local:5432/keycloak
-
-        - name: KC_DB_USERNAME
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret
-              key: POSTGRES_USER
-
-        - name: KC_DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret
-              key: POSTGRES_PASSWORD
-
-
-      ports:
-       - containerPort: 8080
