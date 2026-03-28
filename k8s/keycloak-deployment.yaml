@@ -42,8 +42,15 @@ spec:
 
             echo "Starting keycloak with postgres"
 
-            exec /opt/keycloak/bin/kc.sh start --http-port=8080 \
-              
+            exec /opt/keycloak/bin/kc.sh start  \
+              --db=postgres \
+              --db-url=jdbc:postgresql://postgres.keycloak.svc.cluster.local:5432/keycloak \
+              --db-username=$KC_DB_USERNAME \
+              --db-password=$KC_DB_PASSWORD \
+              --http-port=8080
+              --hostnname=keycloak.ecommerce.local
+              --hostname-strict=false
+
         env:
         - name: KC_DB
           value: postgres
@@ -55,7 +62,7 @@ spec:
             secretKeyRef:
               name: postgres-secret
               key: POSTGRES_USER
-              
+
         - name: KC_DB_PASSWORD
           valueFrom:
             secretKeyRef:
