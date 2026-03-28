@@ -40,9 +40,28 @@ spec:
             echo "Loading Vault secrets..."
             . /vault/secrets/keycloak-admin
 
-            echo "Admin user: $KEYCLOAK_ADMIN"
+            echo "Starting keycloak with postgres"
 
-            exec /opt/keycloak/bin/kc.sh start-dev --http-port=8080
+            exec /opt/keycloak/bin/kc.sh start --http-port=8080 \
+              
+        env:
+        - name: KC_DB
+          value: postgres
+        - name: KC_DB_URL
+          value: jdbc:postgresql://postgres.keycloak.svc.cluster.local:5432/keycloak
+
+        - name: KC_DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_USER
+              
+        - name: KC_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: POSTGRES_PASSWORD
+
 
         ports:
         - containerPort: 8080
