@@ -4,7 +4,7 @@ metadata:
   name: keycloak-ingress
   namespace: keycloak
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   tls:
     - hosts:
