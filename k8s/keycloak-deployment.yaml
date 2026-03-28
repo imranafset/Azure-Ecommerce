@@ -47,8 +47,8 @@ spec:
               --db-url=jdbc:postgresql://postgres.keycloak.svc.cluster.local:5432/keycloak \
               --db-username=$KC_DB_USERNAME \
               --db-password=$KC_DB_PASSWORD \
-              --http-port=8080
-              --hostname=keycloak.ecommerce.local
+              --http-port=8080 \
+              --hostname=keycloak.ecommerce.local \
               --hostname-strict=false
 
         env:
