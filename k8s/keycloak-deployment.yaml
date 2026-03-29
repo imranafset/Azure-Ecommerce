@@ -46,7 +46,7 @@ spec:
                 --hostname-strict=true
           volumeMounts:
             - name: keycloak-keystore
-              mountPath: /etc/x509/
+              mountPath: /etc/x509/keycloak.p12
               subPath: keycloak.p12
               readOnly: true
           env:
