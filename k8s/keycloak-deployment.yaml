@@ -41,7 +41,7 @@ spec:
                 --db-password=$KC_DB_PASSWORD \
                 --https-key-store-file=/etc/x509/keycloak.p12 \
                 --https-key-store-password=changeit \
-                --http-port=8443 \
+                --https-port=8443 \
                 --hostname=keycloak.ecommerce.local \
                 --hostname-strict=true
           volumeMounts:
