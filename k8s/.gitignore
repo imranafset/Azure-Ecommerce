@@ -1,2 +1,5 @@
 keycloak-secret.yaml
 keycloak-ingress-secret.yaml
+*secret.yaml
+*.p12
+*.jks
