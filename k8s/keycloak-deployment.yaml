@@ -35,19 +35,20 @@ spec:
 
               echo "Starting Keycloak with Postgres"
               exec /opt/keycloak/bin/kc.sh start \
+                --verbose \
                 --db=postgres \
                 --db-url=jdbc:postgresql://postgres.keycloak.svc.cluster.local:5432/keycloak \
                 --db-username=$KC_DB_USERNAME \
                 --db-password=$KC_DB_PASSWORD \
-                --https-key-store-file=/opt/keycloak/conf/truststore.p12 \
+                --https-key-store-file=/etc/x509/keycloak.p12 \
                 --https-key-store-password=changeit \
                 --https-port=8443 \
                 --hostname=keycloak.ecommerce.local \
                 --hostname-strict=true
+                --proxy=passthrough
           volumeMounts:
             - name: keycloak-keystore
-              mountPath: /etc/x509/keycloak.p12
-              subPath: keycloak.p12
+              mountPath: /etc/x509/
               readOnly: true
           env:
             - name: KC_DB
