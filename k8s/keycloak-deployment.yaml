@@ -40,15 +40,12 @@ spec:
                 --db-username=$KC_DB_USERNAME \
                 --db-password=$KC_DB_PASSWORD \
                 --http-enabled=true \
-                --https-port=8080 \
+                --http-port=8080 \
                 --hostname=keycloak.ecommerce.local \
                 --hostname-strict=false
                 --proxy=edge 
                 
-          volumeMounts:
-            - name: keycloak-keystore
-              mountPath: /etc/x509/
-              readOnly: true
+
           env:
             - name: KC_DB
               value: postgres
@@ -66,7 +63,4 @@ spec:
                   key: POSTGRES_PASSWORD
           ports:
             - containerPort: 8080
-      volumes:
-        - name: keycloak-keystore
-          secret:
-            secretName: keycloak-keystore
+      
