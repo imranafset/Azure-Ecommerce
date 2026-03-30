@@ -6,10 +6,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 spec:
-  tls:
-    - hosts:
-        - keycloak.ecommerce.local
-      secretName: keycloak-tls
   ingressClassName: nginx
   rules:
     - host: keycloak.ecommerce.local
