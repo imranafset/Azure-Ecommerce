@@ -5,19 +5,21 @@ metadata:
   namespace: argocd
 spec:
   project: default
+
   source:
     repoURL: https://kyverno.github.io/kyverno/
-    targetRevision: 3.2.6
+    chart: kyverno
+    targetRevision: 3.2.6   # stable version
 
     helm:
       values: |
         admissionController:
           replicas: 1
 
-
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
+
   syncPolicy:
     automated:
       prune: true
