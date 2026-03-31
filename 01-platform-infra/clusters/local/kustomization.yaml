@@ -14,4 +14,5 @@ resources:
   - k8s/keycloak-deployment.yaml
   - k8s/keycloak-ingress.yaml 
   - k8s/keycloak-svc.yaml
+  - kyverno-app.yaml
   
