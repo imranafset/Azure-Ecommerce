@@ -3,30 +3,33 @@ kind: Application
 metadata:
   name: kyverno
   namespace: argocd
+
 spec:
   project: default
 
   source:
     repoURL: https://kyverno.github.io/kyverno/
     chart: kyverno
-    targetRevision: 3.2.6   # stable version
+    targetRevision: 3.2.6
 
     helm:
-      skipCRDs: true
+      skipCrds: true
       values: |
         admissionController:
           replicas: 1
-       
+
+        # 🔥 Override cleanup job image to Harbor
         cleanupJobs:
           kubectl:
-             image:
-               repository: core.habor.domain/ecommerce/bitnami/kubectl
-               tag: 1.27.3
-               pullPolicy: IfNotPresent
+            image:
+              repository: core.harbor.domain/ecommerce/bitnami/kubectl
+              tag: latest
+              pullPolicy: IfNotPresent
+
+        # (Optional but recommended) ensure controllers use stable images
         image:
           registry: ghcr.io
-            
-        
+
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
