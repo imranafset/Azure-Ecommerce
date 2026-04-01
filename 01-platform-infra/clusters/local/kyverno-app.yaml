@@ -12,10 +12,21 @@ spec:
     targetRevision: 3.2.6   # stable version
 
     helm:
+      skipCRDs: true
       values: |
         admissionController:
           replicas: 1
-
+       
+        cleanupJobs:
+          kubectl:
+             image:
+               repository: core.habor.domain/ecommerce/bitnami/kubectl
+               tag: 1.27.3
+               pullPolicy: IfNotPresent
+        image:
+          registry: ghcr.io
+            
+        
   destination:
     server: https://kubernetes.default.svc
     namespace: kyverno
