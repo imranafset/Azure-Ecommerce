@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno-crds
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/kyverno/kyverno
+    targetRevision: v1.12.5
+    path: config/crds
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

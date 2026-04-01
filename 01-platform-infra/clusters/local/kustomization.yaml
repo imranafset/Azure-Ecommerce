@@ -1,18 +1,37 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kyverno
+  namespace: argocd
+spec:
+  project: default
 
-resources:
-  - cert-manager-config.yaml
-  - harbor-app.yaml
-  - postgres-app.yaml
-  - redis-app.yaml
-  - ecommerce-backend.yaml
-  - vault.yaml
-  - vault-addons.yaml
-  - k8s/keycloak-sa.yaml
-  - k8s/keycloak-cm.yaml
-  - k8s/keycloak-deployment.yaml
-  - k8s/keycloak-ingress.yaml 
-  - k8s/keycloak-svc.yaml
-  - kyverno-app.yaml
-  
+  source:
+    repoURL: https://kyverno.github.io/kyverno/
+    chart: kyverno
+    targetRevision: 3.2.6
+
+    helm:
+      skipCRDs: true
+      values: |
+        admissionController:
+          replicas: 1
+
+        image:
+          registry: core.harbor.domain/ecommerce
+
+        initContainer:
+          image:
+            repository: bitnami/kubectl
+            tag: latest
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kyverno
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

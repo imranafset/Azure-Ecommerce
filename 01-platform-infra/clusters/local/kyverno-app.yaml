@@ -3,7 +3,6 @@ kind: Application
 metadata:
   name: kyverno
   namespace: argocd
-
 spec:
   project: default
 
@@ -18,17 +17,41 @@ spec:
         admissionController:
           replicas: 1
 
-        # 🔥 Override cleanup job image to Harbor
-        cleanupJobs:
-          kubectl:
-            image:
-              repository: core.harbor.domain/ecommerce/bitnami/kubectl
-              tag: latest
-              pullPolicy: IfNotPresent
+        cleanupController:
+          enabled: true
 
-        # (Optional but recommended) ensure controllers use stable images
-        image:
-          registry: ghcr.io
+        reportsController:
+          enabled: true
+
+        backgroundController:
+          enabled: true
+
+        cleanupJobs:
+          admissionReports:
+            image:
+              registry: core.harbor.domain
+              repository: ecommerce/bitnami/kubectl
+              tag: latest
+          clusterAdmissionReports:
+            image:
+              registry: core.harbor.domain
+              repository: ecommerce/bitnami/kubectl
+              tag: latest
+          clusterEphemeralReports:
+            image:
+              registry: core.harbor.domain
+              repository: ecommerce/bitnami/kubectl
+              tag: latest
+          ephemeralReports:
+            image:
+              registry: core.harbor.domain
+              repository: ecommerce/bitnami/kubectl
+              tag: latest
+          updateRequests:
+            image:
+              registry: core.harbor.domain
+              repository: ecommerce/bitnami/kubectl
+              tag: latest
 
   destination:
     server: https://kubernetes.default.svc
@@ -40,3 +63,4 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      
