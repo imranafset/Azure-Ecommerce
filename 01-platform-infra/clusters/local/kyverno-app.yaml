@@ -10,48 +10,10 @@ spec:
     repoURL: https://kyverno.github.io/kyverno/
     chart: kyverno
     targetRevision: 3.2.6
-
     helm:
-      skipCrds: true
-      values: |
-        admissionController:
-          replicas: 1
-
-        cleanupController:
-          enabled: true
-
-        reportsController:
-          enabled: true
-
-        backgroundController:
-          enabled: true
-
-        cleanupJobs:
-          admissionReports:
-            image:
-              registry: core.harbor.domain
-              repository: ecommerce/bitnami/kubectl
-              tag: latest
-          clusterAdmissionReports:
-            image:
-              registry: core.harbor.domain
-              repository: ecommerce/bitnami/kubectl
-              tag: latest
-          clusterEphemeralReports:
-            image:
-              registry: core.harbor.domain
-              repository: ecommerce/bitnami/kubectl
-              tag: latest
-          ephemeralReports:
-            image:
-              registry: core.harbor.domain
-              repository: ecommerce/bitnami/kubectl
-              tag: latest
-          updateRequests:
-            image:
-              registry: core.harbor.domain
-              repository: ecommerce/bitnami/kubectl
-              tag: latest
+      parameters:
+        - name: installCRDs
+          value: "true"   # ✅ THIS FIXES YOUR ISSUE
 
   destination:
     server: https://kubernetes.default.svc
@@ -63,4 +25,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      
