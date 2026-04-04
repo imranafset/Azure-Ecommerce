@@ -25,16 +25,25 @@ spec:
           SPRING_DATASOURCE_USERNAME={{ .Data.data.username }}
           SPRING_DATASOURCE_PASSWORD={{ .Data.data.password }}
           {{- end }}
+
     spec:
       serviceAccountName: backend-app-sa
       imagePullSecrets:
         - name: harbor-registry-secret
+
       containers:
         - name: backend
           image: core.harbor.domain/ecommerce/backend-app:latest
           ports:
             - containerPort: 8080
-          # --- ADD THIS SECTION BELOW ---
+
+          # 🔥 CRITICAL FIX: Load Vault secrets into env
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              source /vault/secrets/db
+              exec java -jar /app/app.jar
+
           env:
             - name: LOGGING_LEVEL_ORG_HIBERNATE_SQL
               value: "DEBUG"
@@ -44,26 +53,32 @@ spec:
               value: "true"
             - name: MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE
               value: "health,info,prometheus"
+
             - name: REDIS_HOST
               value: "redis-infra-master.redis-system.svc.cluster.local"
+
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:postgresql://postgres-service:5432/ecommerce"
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: username
+
+            # ❌ REMOVE THIS (IMPORTANT)
+            # - name: SPRING_DATASOURCE_USERNAME
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: postgres-credentials
+            #       key: username
+
             - name: SPRING_JPA_HIBERNATE_DDL_AUTO
               value: "update"
+
             - name: REDIS_PORT
               value: "6379"
+
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: redis-password-secret
                   key: redis-password
-            
-          # ------------------------------
+
           resources:
             requests:
               cpu: "100m"
