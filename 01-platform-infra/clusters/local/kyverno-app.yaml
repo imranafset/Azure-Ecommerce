@@ -1,24 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kyverno
+  name: kyverno-policies
   namespace: argocd
 spec:
   project: default
-
   source:
-    repoURL: https://kyverno.github.io/kyverno/
-    chart: kyverno
-    targetRevision: 3.2.6
-    
-
+    repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
+    targetRevision: HEAD
+    path: 01-platform-infra/kyverno-policies
   destination:
     server: https://kubernetes.default.svc
-    namespace: kyverno
-
+    namespace: default
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
