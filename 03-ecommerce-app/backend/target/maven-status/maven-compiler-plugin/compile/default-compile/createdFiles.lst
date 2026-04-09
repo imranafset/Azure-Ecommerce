@@ -1,2 +1,5 @@
-com/ecommerce/BackendApplication.class
 com/ecommerce/model/Product.class
+com/ecommerce/repository/ProductRepository.class
+com/ecommerce/service/ProductService.class
+com/ecommerce/controller/ProductController.class
+com/ecommerce/BackendApplication.class
