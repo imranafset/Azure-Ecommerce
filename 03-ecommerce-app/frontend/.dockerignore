@@ -1,0 +1,32 @@
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.git
+.gitignore
+
+# Build output (if rebuilding inside container)
+build
+dist
+
+# Env files (important for security)
+.env
+.env.*
+
+# OS / editor junk
+*.log
+*.swp
+.DS_Store
+
+# Dev / CI files
+*.yaml
+*.yml
+docker-compose.yml
+k8s/
+helm/
+
+# Tests & docs
+tests
+__tests__
+coverage
+README.md
