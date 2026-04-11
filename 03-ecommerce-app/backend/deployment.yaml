@@ -12,17 +12,6 @@ spec:
     metadata:
       labels:
         app: backend
-      annotations:
-        vault.hashicorp.com/agent-inject: "true"
-        vault.hashicorp.com/role: "ecommerce-role"
-        vault.hashicorp.com/agent-inject-secret-db: "secret/data/ecommerce/db"
-        vault.hashicorp.com/vault-addr: "http://vault.vault.svc:8200"
-        vault.hashicorp.com/vault-skip-verify: "true"
-        vault.hashicorp.com/agent-inject-template-db: |
-          {{- with secret "secret/data/ecommerce/db" -}}
-          SPRING_DATASOURCE_USERNAME={{ .Data.data.username }}
-          SPRING_DATASOURCE_PASSWORD={{ .Data.data.password }}
-          {{- end }}
     spec:
       serviceAccountName: backend-app-sa
       imagePullSecrets:
@@ -32,11 +21,6 @@ spec:
           image: core.harbor.domain/ecommerce/backend-app:latest
           ports:
             - containerPort: 8080
-          #command: ["/bin/sh", "-c"]
-          #args:
-            #- |
-              #source /vault/secrets/db
-              #exec java -jar /app/app.jar
           env:
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
