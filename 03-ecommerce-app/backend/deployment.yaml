@@ -32,12 +32,22 @@ spec:
           image: core.harbor.domain/ecommerce/backend-app:latest
           ports:
             - containerPort: 8080
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              source /vault/secrets/db
-              exec java -jar /app/app.jar
+          #command: ["/bin/sh", "-c"]
+          #args:
+            #- |
+              #source /vault/secrets/db
+              #exec java -jar /app/app.jar
           env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: password
             - name: LOGGING_LEVEL_ORG_HIBERNATE_SQL
               value: "DEBUG"
             - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_DATA_REDIS
