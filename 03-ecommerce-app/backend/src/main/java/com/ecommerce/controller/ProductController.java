@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-@CrossOrigin(origins = "https://frontend.ecommerce.local")
+@CrossOrigin(origins = "http://frontend.ecommerce.local")
 public class ProductController {
 
     @Autowired

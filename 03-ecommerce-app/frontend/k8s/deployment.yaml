@@ -17,7 +17,7 @@ spec:
         - name: harbor-registry-secret
       containers:
         - name: frontend
-          image: core.harbor.domain/ecommerce/frontend-app:v3
+          image: core.harbor.domain/ecommerce/frontend-app:v4
           ports:
             - containerPort: 3000
           resources:
