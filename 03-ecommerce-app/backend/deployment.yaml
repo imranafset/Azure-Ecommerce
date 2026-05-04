@@ -18,7 +18,7 @@ spec:
         - name: harbor-registry-secret
       containers:
         - name: backend
-          image: core.harbor.domain/ecommerce/backend-app:v7
+          image: core.harbor.domain/ecommerce/backend-app:v8
           ports:
             - containerPort: 8080
           env:
