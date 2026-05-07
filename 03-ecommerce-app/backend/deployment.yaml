@@ -43,9 +43,9 @@ spec:
             - name: REDIS_HOST
               value: "redis-infra-master.redis-system.svc.cluster.local"
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://postgres-service:5432/ecommerce"
+              value: "jdbc:postgresql://postgres-service:5432/ecommerce_db"
             - name: SPRING_JPA_HIBERNATE_DDL_AUTO
-              value: "update"
+              value: "create"
             - name: REDIS_PORT
               value: "6379"
             - name: REDIS_PASSWORD
