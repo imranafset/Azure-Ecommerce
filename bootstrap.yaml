@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://gitlab.com/imran-devsecops/azure-ecommerce.git
     targetRevision: HEAD
-    path: 01-platform-infra/ # Where your new files are
+    path: 01-platform-infra/infrastructure/harbor # Where your new files are
     directory:
       recurse: true
   destination:
